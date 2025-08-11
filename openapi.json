@@ -20,6 +20,35 @@
             "required": true,
             "description": "Any URL on the target site (include https://). The API normalizes to the site's origin.",
             "schema": { "type": "string", "format": "uri" }
+          },
+          {
+            "in": "query",
+            "name": "bots",
+            "required": false,
+            "description": "User-agent names to test. Defaults to a comprehensive AI bot list.",
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "array",
+              "items": { "type": "string" },
+              "default": [
+                "GPTBot","ChatGPT-User","OAI-SearchBot",
+                "PerplexityBot","Perplexity-User",
+                "Google-Extended","Google AI","GoogleOther",
+                "ClaudeBot","Anthropic-ai","Claude-Web",
+                "Applebot-Extended",
+                "Bingbot","Bing Copilot",
+                "DuckDuckBot","BraveBot","YouBot","NeevaAI","KomodoBot",
+                "CCBot","Diffbot","SerpApiBot","DataForSEO","AhrefsBot","SemrushBot"
+              ]
+            }
+          },
+          {
+            "in": "query",
+            "name": "includeRobotsTxt",
+            "required": false,
+            "description": "Return the raw robots.txt text.",
+            "schema": { "type": "boolean", "default": true }
           }
         ],
         "responses": {
@@ -27,7 +56,37 @@
             "description": "Check completed",
             "content": {
               "application/json": {
-                "schema": { "type": "object" }
+                "schema": {
+                  "type": "object",
+                  "required": ["robotsTxtFound","robotsUrl","blockedBots","results","warnings"],
+                  "properties": {
+                    "robotsTxtFound": { "type": "boolean" },
+                    "robotsUrl": { "type": "string" },
+                    "statusCode": { "type": ["integer","null"] },
+                    "blockedBots": {
+                      "type": "array",
+                      "items": { "type": "string" }
+                    },
+                    "results": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "required": ["userAgent","canFetchRoot","canFetchSitewide"],
+                        "properties": {
+                          "userAgent": { "type": "string" },
+                          "canFetchRoot": { "type": "boolean" },
+                          "canFetchSitewide": { "type": "boolean" },
+                          "notes": { "type": ["string","null"] }
+                        }
+                      }
+                    },
+                    "robotsTxt": { "type": ["string","null"] },
+                    "warnings": {
+                      "type": "array",
+                      "items": { "type": "string" }
+                    }
+                  }
+                }
               }
             }
           }
