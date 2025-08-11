@@ -1,0 +1,55 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "AI Bot Block Checker API",
+    "description": "Checks if a website blocks popular AI crawlers via robots.txt.",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://ai-bot-block-checker.onrender.com"
+    }
+  ],
+  "paths": {
+    "/check": {
+      "get": {
+        "summary": "Check AI bot block status",
+        "description": "Checks a site's robots.txt to see which AI bots are blocked or allowed.",
+        "parameters": [
+          {
+            "name": "url",
+            "in": "query",
+            "description": "The website URL to check (include https://)",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "AI bot block status",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "robotsTxtFound": { "type": "boolean" },
+                    "blockedBots": {
+                      "type": "array",
+                      "items": { "type": "string" }
+                    },
+                    "allowedBots": {
+                      "type": "array",
+                      "items": { "type": "string" }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
